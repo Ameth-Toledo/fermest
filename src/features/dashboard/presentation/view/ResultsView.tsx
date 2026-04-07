@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 import { useExperimentStore } from '../../../../core/store/useExperimentStore'
 
 const ResultsView = () => {
@@ -16,7 +16,9 @@ const ResultsView = () => {
 
   const historyData = result.history.map((fitness, i) => ({
     generacion: i,
-    fitness: parseFloat(fitness.toFixed(4)),
+    mejor: parseFloat(fitness.toFixed(4)),
+    peor: parseFloat((result.history_worst?.[i] ?? 0).toFixed(4)),
+    promedio: parseFloat((result.history_avg?.[i] ?? 0).toFixed(4)),
   }))
 
   const tooltipStyle = {
@@ -113,14 +115,10 @@ const ResultsView = () => {
                 width={55}
               />
               <Tooltip contentStyle={tooltipStyle} />
-              <Line
-                type="monotone"
-                dataKey="fitness"
-                stroke="#22C55E"
-                strokeWidth={2}
-                dot={{ fill: '#22C55E', r: 3 }}
-                activeDot={{ r: 5 }}
-              />
+              <Legend wrapperStyle={{ color: '#71717A', fontSize: '11px', paddingTop: '16px' }} />
+              <Line type="monotone" dataKey="mejor" stroke="#22C55E" strokeWidth={2} dot={{ fill: '#22C55E', r: 3 }} activeDot={{ r: 5 }} />
+              <Line type="monotone" dataKey="promedio" stroke="#F59E0B" strokeWidth={2} dot={{ fill: '#F59E0B', r: 3 }} activeDot={{ r: 5 }} />
+              <Line type="monotone" dataKey="peor" stroke="#EF4444" strokeWidth={2} dot={{ fill: '#EF4444', r: 3 }} activeDot={{ r: 5 }} />
             </LineChart>
           </ResponsiveContainer>
         </div>
